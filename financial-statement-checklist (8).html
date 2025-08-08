@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반기재무제표 검토 체크리스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .progress-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #495057;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .controls {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        
+        .info-section {
+            padding: 30px;
+            background: #f0f4f8;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .info-title {
+            font-size: 1.3em;
+            color: #495057;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+        
+        .info-input {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        
+        .checklist-content {
+            padding: 30px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        
+        .checklist-category {
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        .subcategory {
+            margin-bottom: 25px;
+        }
+        
+        .subcategory-title {
+            font-size: 1.1em;
+            color: #495057;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #667eea;
+            font-weight: 600;
+        }
+        
+        .checklist-item-row {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .checklist-item-row:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .checklist-item-row.completed {
+            background: #d4edda;
+        }
+        
+        .checklist-item-row.completed .item-text {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        
+        .checkbox-wrapper {
+            margin-right: 15px;
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .item-text {
+            flex: 1;
+            font-size: 0.95em;
+            color: #212529;
+            margin-right: 15px;
+        }
+        
+        .answer-input {
+            flex: 0 0 250px;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .delete-btn {
+            display: none;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .admin-mode .delete-btn {
+            display: block;
+        }
+        
+        .footer {
+            padding: 30px;
+            background: #f8f9fa;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .auto-save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .auto-save-indicator.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>반기재무제표 검토 체크리스트</h1>
+        </div>
+        
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>진행 현황</span>
+                <span id="progress-text">완료: 0 / 167 항목</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-danger" onclick="toggleAdmin()">🔐 관리자 모드</button>
+            <button class="btn btn-success" onclick="downloadHTML()">📄 HTML 파일로 저장</button>
+            <button class="btn btn-primary" onclick="exportJSON()">💾 JSON 데이터 내보내기</button>
+        </div>
+        
+        <div class="info-section">
+            <h2 class="info-title">📋 기본 정보</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label class="info-label">회사명</label>
+                    <input type="text" class="info-input" id="company-name" placeholder="회사명을 입력하세요" onchange="saveData()">
+                </div>
+                <div class="info-item">
+                    <label class="info-label">검토대상기간</label>
+                    <input type="text" class="info-input" id="review-period" placeholder="예: 2025년 1분기" onchange="saveData()">
+                </div>
+                <div class="info-item">
+                    <label class="info-label">작성일</label>
+                    <input type="date" class="info-input" id="creation-date" onchange="saveData()">
+                </div>
+                <div class="info-item">
+                    <label class="info-label">작성자</label>
+                    <input type="text" class="info-input" id="author" placeholder="작성자명" onchange="saveData()">
+                </div>
+                <div class="info-item">
+                    <label class="info-label">검토자</label>
+                    <input type="text" class="info-input" id="reviewer" placeholder="검토자명" onchange="saveData()">
+                </div>
+            </div>
+        </div>
+        
+        <div class="checklist-content" id="checklist-content">
+            <!-- 체크리스트 항목들이 여기에 들어갑니다 -->
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 반기재무제표 검토 체크리스트 | 자동 저장 기능 활성화</p>
+        </div>
+    </div>
+    
+    <div class="auto-save-indicator" id="auto-save">✓ 자동 저장됨</div>
+
+    <script>
+        // 전역 변수
+        var adminMode = false;
+        
+        // 체크리스트 데이터
+        var checklistItems = [
+            {category: "1️⃣ 재무제표 전반 및 회계정책", subcategory: "1.1 회계정책 변경 (8개 항목)", items: [
+                "1. 중간기간 중 적용된 새로운 회계기준(예: K-IFRS 개정사항)이 있습니까?",
+                "2. 해당 기준의 적용이 재무제표에 미친 영향을 분석한 문서가 있습니까?",
+                "3. 회계정책 변경으로 인한 소급적용 또는 미래적용의 근거가 명확합니까?",
+                "4. 회계정책 변경이 비교표시된 전기 재무제표에 미친 영향은 얼마입니까?",
+                "5. 회계정책 변경사항이 주석에 적절히 공시되었습니까?",
+                "6. 회계정책 변경의 누적효과가 적절히 계산되었습니까?",
+                "7. 실무적 간편법 적용 시 그 조건을 충족했습니까?",
+                "8. 회계정책 변경으로 인한 비교정보 재작성이 필요합니까?"
+            ]},
+            {category: "1️⃣ 재무제표 전반 및 회계정책", subcategory: "1.2 회계 추정치 변경 (7개 항목)", items: [
+                "9. 대손충당금, 재고자산 평가, 제품보증 충당부채 등의 중요한 추정치 산정 모델이나 가정이 변경되었습니까?",
+                "10. 추정치 변경의 근거는 무엇이며, 외부 전문가의 검토를 받은 적이 있습니까?",
+                "11. 추정치 변경이 당기 및 미래 기간에 미치는 재무적 영향을 정량화했습니까?",
+                "12. 중요한 회계추정의 불확실성에 대한 민감도 분석을 수행했습니까?",
+                "13. 추정치 변경과 회계정책 변경이 명확히 구분되었습니까?",
+                "14. 추정치 변경의 이유가 합리적이고 일관성이 있습니까?",
+                "15. 과거 추정치의 정확성에 대한 검토가 이루어졌습니까?"
+            ]},
+            {category: "1️⃣ 재무제표 전반 및 회계정책", subcategory: "1.3 비용 인식 (8개 항목)", items: [
+                "16. 중요한 금액의 비용이 중간기간에 걸쳐 균등하게 배분되었습니까?",
+                "17. 원가성격분류가 적절하게 유지되었습니까?",
+                "18. 계절적 특성을 가진 비용의 기간배분이 합리적입니까?",
+                "19. 연간 기준으로만 결정되는 비용(상여금, 소득세 등)의 중간기간 추정이 적절합니까?",
+                "20. 비용의 발생주의 원칙이 일관되게 적용되었습니까?",
+                "21. 미지급비용과 선급비용의 계상이 적절합니까?",
+                "22. 비용의 기능별 분류가 일관되게 적용되었습니까?",
+                "23. 중요한 비용항목의 전년 동기 대비 변동분석이 이루어졌습니까?"
+            ]},
+            {category: "2️⃣ 재무상태표", subcategory: "2.1 자산 (20개 항목)", items: [
+                "24. 현금및현금성자산의 구성내역과 사용제한 여부를 확인했습니까?",
+                "25. 단기금융상품의 만기일과 이자율이 적절히 공시되었습니까?",
+                "26. 매출채권 회수가능성 평가 및 대손충당금 설정이 적절합니까?",
+                "27. 재고자산 실사를 수행했으며, 그 결과가 장부에 반영되었습니까?",
+                "28. 재고자산 순실현가능가치 평가가 적절히 이루어졌습니까?",
+                "29. 유형자산 취득원가와 감가상각 방법이 일관되게 적용되었습니까?",
+                "30. 유형자산 손상징후 검토 및 손상차손 인식이 적절합니까?",
+                "31. 무형자산의 내용연수 및 상각방법이 적절합니까?",
+                "32. 영업권 손상검사를 수행했으며 그 결과가 적절합니까?",
+                "33. 이연법인세자산의 실현가능성 평가가 적절합니까?",
+                "34. 기타금융자산의 공정가치 평가가 적절히 이루어졌습니까?",
+                "35. 사용권자산의 인식 및 측정이 K-IFRS 1116에 따라 적절합니까?",
+                "36. 투자부동산의 공정가치 또는 원가모형 적용이 일관됩니까?",
+                "37. 관계기업 및 공동기업 투자의 지분법 적용이 적절합니까?",
+                "38. 선급금 및 선급비용의 비용화 시점이 적절합니까?",
+                "39. 장기매출채권의 현재가치 평가가 적절합니까?",
+                "40. 생물자산의 공정가치 측정이 적절합니까?",
+                "41. 탐사평가자산의 손상검토가 적절히 수행되었습니까?",
+                "42. 보증금의 현재가치 평가 및 상각이 적절합니까?",
+                "43. 매각예정자산의 분류기준 충족 여부를 확인했습니까?"
+            ]},
+            {category: "2️⃣ 재무상태표", subcategory: "2.2 부채 (15개 항목)", items: [
+                "44. 매입채무 및 미지급금의 완전성이 확인되었습니까?",
+                "45. 차입금의 유동/비유동 분류가 적절합니까?",
+                "46. 사채의 유효이자율 계산 및 상각이 적절합니까?",
+                "47. 충당부채 추정의 합리성과 적절성을 검토했습니까?",
+                "48. 판매보증충당부채 설정이 과거 경험률에 기초하여 적절합니까?",
+                "49. 복구충당부채의 추정 및 현재가치 평가가 적절합니까?",
+                "50. 리스부채의 측정 및 재평가가 적절합니까?",
+                "51. 퇴직급여채무의 보험수리적 평가가 적절합니까?",
+                "52. 이연법인세부채 계산의 적정성을 확인했습니까?",
+                "53. 선수금 및 선수수익의 수익인식 시점이 적절합니까?",
+                "54. 파생상품부채의 공정가치 평가가 적절합니까?",
+                "55. 우발부채의 인식기준 충족 여부를 검토했습니까?",
+                "56. 금융보증부채의 인식 및 측정이 적절합니까?",
+                "57. 계약부채의 식별 및 측정이 K-IFRS 1115에 따라 적절합니까?",
+                "58. 환불부채의 추정이 합리적입니까?"
+            ]},
+            {category: "3️⃣ 손익계산서", subcategory: "3.1 수익 (10개 항목)", items: [
+                "59. 수익인식 5단계 모델이 적절히 적용되었습니까?",
+                "60. 계약 식별 및 결합 기준이 적절히 적용되었습니까?",
+                "61. 수행의무의 식별이 적절합니까?",
+                "62. 거래가격 산정시 변동대가 추정이 적절합니까?",
+                "63. 거래가격의 수행의무 배분이 상대적 개별 판매가격에 기초했습니까?",
+                "64. 한 시점 vs 기간에 걸친 수익인식 판단이 적절합니까?",
+                "65. 본인 vs 대리인 구분이 적절합니까?",
+                "66. 라이선스 수익의 인식시점이 적절합니까?",
+                "67. 고객충성제도 관련 수익인식이 적절합니까?",
+                "68. 계약변경의 회계처리가 적절합니까?"
+            ]},
+            {category: "3️⃣ 손익계산서", subcategory: "3.2 비용 (18개 항목)", items: [
+                "69. 매출원가 계산방법이 일관되게 적용되었습니까?",
+                "70. 재고자산 원가흐름 가정(FIFO, 평균법 등)이 일관되게 적용되었습니까?",
+                "71. 제조간접비 배부기준이 합리적입니까?",
+                "72. 판매비와관리비 분류가 적절합니까?",
+                "73. 인건비 관련 비용이 완전하게 계상되었습니까?",
+                "74. 퇴직급여 비용 계산이 적절합니까?",
+                "75. 주식기준보상 비용 인식이 적절합니까?",
+                "76. 감가상각비 계산 및 배부가 적절합니까?",
+                "77. 무형자산상각비 계산이 적절합니까?",
+                "78. 연구개발비 자본화 기준이 일관되게 적용되었습니까?",
+                "79. 광고선전비 인식시점이 적절합니까?",
+                "80. 금융비용 자본화 요건 충족 여부를 확인했습니까?",
+                "81. 리스료 비용처리가 적절합니까?",
+                "82. 대손상각비 계상이 적절합니까?",
+                "83. 외주가공비 회계처리가 적절합니까?",
+                "84. 수선유지비와 자본적 지출의 구분이 적절합니까?",
+                "85. 법인세비용 계산이 적절합니까?",
+                "86. 중단영업손익의 구분표시가 적절합니까?"
+            ]},
+            {category: "4️⃣ 자본변동표 및 현금흐름표", subcategory: "4.1 자본변동표 (7개 항목)", items: [
+                "87. 기초잔액이 전기 재무상태표와 일치합니까?",
+                "88. 당기순이익이 손익계산서와 일치합니까?",
+                "89. 배당금 지급이 이사회/주주총회 결의와 일치합니까?",
+                "90. 자기주식 거래가 적절히 반영되었습니까?",
+                "91. 기타포괄손익 항목이 적절히 표시되었습니까?",
+                "92. 주식기준보상 거래가 적절히 반영되었습니까?",
+                "93. 전환사채/신주인수권 행사가 적절히 반영되었습니까?"
+            ]},
+            {category: "4️⃣ 자본변동표 및 현금흐름표", subcategory: "4.2 현금흐름표 (8개 항목)", items: [
+                "94. 영업활동 현금흐름 계산방법(직접법/간접법)이 일관되게 적용되었습니까?",
+                "95. 당기순이익 조정항목이 적절합니까?",
+                "96. 운전자본 변동이 재무상태표 변동과 일치합니까?",
+                "97. 투자활동 현금흐름 분류가 적절합니까?",
+                "98. 재무활동 현금흐름 분류가 적절합니까?",
+                "99. 현금및현금성자산의 기초/기말 잔액이 재무상태표와 일치합니까?",
+                "100. 이자 및 배당금 수취/지급 분류가 일관되게 적용되었습니까?",
+                "101. 비현금거래가 주석에 적절히 공시되었습니까?"
+            ]},
+            {category: "5️⃣ 주석 및 공시사항", subcategory: "5.1 일반사항 (10개 항목)", items: [
+                "102. 기업의 개요 정보가 적절히 공시되었습니까?",
+                "103. 재무제표 작성기준이 명확히 공시되었습니까?",
+                "104. 중요한 회계정책이 적절히 공시되었습니까?",
+                "105. 중요한 회계추정 및 판단이 공시되었습니까?",
+                "106. 회계정책 변경사항이 적절히 공시되었습니까?",
+                "107. 회계추정 변경사항이 적절히 공시되었습니까?",
+                "108. 전기오류수정 사항이 적절히 공시되었습니까?",
+                "109. 계속기업가정에 대한 평가가 공시되었습니까?",
+                "110. 연결범위 변동사항이 적절히 공시되었습니까?",
+                "111. 사업결합 관련 사항이 적절히 공시되었습니까?"
+            ]},
+            {category: "5️⃣ 주석 및 공시사항", subcategory: "5.2 상세 공시사항 (20개 항목)", items: [
+                "112. 부문별 정보가 적절히 공시되었습니까?",
+                "113. 금융상품 공정가치 서열체계가 공시되었습니까?",
+                "114. 금융상품 위험관리 정책이 공시되었습니까?",
+                "115. 신용위험 관련 공시가 적절합니까?",
+                "116. 유동성위험 관련 공시가 적절합니까?",
+                "117. 시장위험 관련 공시가 적절합니까?",
+                "118. 민감도 분석이 적절히 공시되었습니까?",
+                "119. 특수관계자 거래가 완전하게 공시되었습니까?",
+                "120. 우발부채 및 약정사항이 적절히 공시되었습니까?",
+                "121. 소송사건이 적절히 공시되었습니까?",
+                "122. 담보제공자산이 적절히 공시되었습니까?",
+                "123. 보증제공 내역이 적절히 공시되었습니까?",
+                "124. 리스 관련 공시사항이 완전합니까?",
+                "125. 종업원급여 관련 공시가 적절합니까?",
+                "126. 주당이익 계산내역이 공시되었습니까?",
+                "127. 현금흐름 정보가 적절히 공시되었습니까?",
+                "128. 자본관리 정책이 공시되었습니까?",
+                "129. 배당 관련 사항이 적절히 공시되었습니까?",
+                "130. 법인세 관련 공시가 적절합니까?",
+                "131. 보고기간 후 사건이 적절히 공시되었습니까?"
+            ]},
+            {category: "5️⃣ 주석 및 공시사항", subcategory: "5.3 추가 공시사항 (12개 항목)", items: [
+                "132. 재무제표 승인일 및 승인기관이 공시되었습니까?",
+                "133. 외부감사인 정보가 공시되었습니까?",
+                "134. 내부회계관리제도 운영실태가 공시되었습니까?",
+                "135. 지배구조 관련 사항이 공시되었습니까?",
+                "136. 주요 경영진 보상이 공시되었습니까?",
+                "137. 주식기준보상 세부내역이 공시되었습니까?",
+                "138. 정부보조금 수령내역이 공시되었습니까?",
+                "139. 탄소배출권 관련 사항이 공시되었습니까?",
+                "140. 암호화폐 보유 관련 사항이 공시되었습니까?",
+                "141. 고객과의 계약에서 생기는 수익 세분화 공시가 적절합니까?",
+                "142. 위험회피회계 관련 공시가 적절합니까?",
+                "143. 매각예정자산 관련 공시가 적절합니까?"
+            ]},
+            {category: "6️⃣ 내부통제 및 절차", subcategory: "6.1 내부통제 (12개 항목)", items: [
+                "144. 재무보고 내부통제시스템이 효과적으로 운영되고 있습니까?",
+                "145. 회계담당자의 권한과 책임이 명확히 구분되어 있습니까?",
+                "146. 중요한 회계처리에 대한 승인절차가 수립되어 있습니까?",
+                "147. 회계시스템 접근권한이 적절히 통제되고 있습니까?",
+                "148. 재무제표 작성 프로세스가 문서화되어 있습니까?",
+                "149. 계정조정 절차가 정기적으로 수행되고 있습니까?",
+                "150. 독립적인 검토절차가 수립되어 있습니까?",
+                "151. 내부감사 지적사항이 적시에 개선되고 있습니까?",
+                "152. 외부감사 지적사항이 적절히 반영되었습니까?",
+                "153. 부정위험 평가절차가 수립되어 있습니까?",
+                "154. 내부고발 시스템이 효과적으로 운영되고 있습니까?",
+                "155. IT 일반통제가 효과적으로 운영되고 있습니까?"
+            ]},
+            {category: "6️⃣ 내부통제 및 절차", subcategory: "6.2 마감절차 (12개 항목)", items: [
+                "156. 월마감 체크리스트가 완료되었습니까?",
+                "157. 계정별 보조부와 총계정원장이 일치합니까?",
+                "158. 은행잔액조정표가 작성되었습니까?",
+                "159. 외화자산부채 환산이 적절히 이루어졌습니까?",
+                "160. 연결조정분개가 완전하게 반영되었습니까?",
+                "161. 내부거래 제거가 적절히 이루어졌습니까?",
+                "162. 분개장 검토가 완료되었습니까?",
+                "163. 시산표가 정확하게 작성되었습니까?",
+                "164. 재무제표 간 상호참조가 정확합니까?",
+                "165. 주석과 본문의 금액이 일치합니까?",
+                "166. 비교재무제표 금액이 정확합니까?",
+                "167. 최종 검토 및 승인이 완료되었습니까?"
+            ]}
+        ];
+        
+        // 체크리스트 HTML 생성
+        function createChecklist() {
+            var container = document.getElementById('checklist-content');
+            var currentCategory = '';
+            var categoryDiv = null;
+            var itemNumber = 1;
+            
+            checklistItems.forEach(function(section) {
+                if (section.category !== currentCategory) {
+                    currentCategory = section.category;
+                    categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'checklist-category';
+                    
+                    var header = document.createElement('div');
+                    header.className = 'category-header';
+                    header.innerHTML = '<h2 class="category-title">' + section.category + '</h2>';
+                    categoryDiv.appendChild(header);
+                    
+                    container.appendChild(categoryDiv);
+                }
+                
+                var subcategoryDiv = document.createElement('div');
+                subcategoryDiv.className = 'subcategory';
+                
+                var subcategoryTitle = document.createElement('h3');
+                subcategoryTitle.className = 'subcategory-title';
+                subcategoryTitle.textContent = section.subcategory;
+                subcategoryDiv.appendChild(subcategoryTitle);
+                
+                section.items.forEach(function(item) {
+                    var row = document.createElement('div');
+                    row.className = 'checklist-item-row';
+                    row.setAttribute('data-item', itemNumber);
+                    
+                    row.innerHTML = 
+                        '<div class="checkbox-wrapper">' +
+                            '<input type="checkbox" id="item-' + itemNumber + '" onchange="handleCheck(' + itemNumber + ', this)">' +
+                        '</div>' +
+                        '<label for="item-' + itemNumber + '" class="item-text">' + item + '</label>' +
+                        '<input type="text" class="answer-input" id="answer-' + itemNumber + '" placeholder="답변을 입력하세요..." onchange="saveData()">' +
+                        '<button class="delete-btn" onclick="deleteItem(' + itemNumber + ')">삭제</button>';
+                    
+                    subcategoryDiv.appendChild(row);
+                    itemNumber++;
+                });
+                
+                categoryDiv.appendChild(subcategoryDiv);
+            });
+        }
+        
+        // 관리자 모드 토글
+        function toggleAdmin() {
+            var password = prompt('관리자 비밀번호를 입력하세요:');
+            if (password === '1234') {
+                adminMode = !adminMode;
+                document.body.classList.toggle('admin-mode');
+                alert(adminMode ? '관리자 모드가 활성화되었습니다.' : '관리자 모드가 비활성화되었습니다.');
+            } else if (password !== null) {
+                alert('비밀번호가 틀렸습니다.');
+            }
+        }
+        
+        // 항목 삭제
+        function deleteItem(itemNum) {
+            if (!adminMode) {
+                alert('관리자 권한이 필요합니다.');
+                return;
+            }
+            
+            if (confirm('이 항목을 삭제하시겠습니까?')) {
+                var row = document.querySelector('[data-item="' + itemNum + '"]');
+                if (row) {
+                    row.remove();
+                    renumberItems(); // 번호 재정렬
+                    updateProgress();
+                    saveData();
+                    alert('항목이 삭제되었습니다.');
+                }
+            }
+        }
+        
+        // 항목 번호 재정렬
+        function renumberItems() {
+            var rows = document.querySelectorAll('.checklist-item-row');
+            
+            rows.forEach(function(row, index) {
+                var newNum = index + 1;
+                
+                // data-item 속성 업데이트
+                row.setAttribute('data-item', newNum);
+                
+                // 체크박스 ID와 onchange 업데이트
+                var checkbox = row.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                    checkbox.id = 'item-' + newNum;
+                    checkbox.setAttribute('onchange', 'handleCheck(' + newNum + ', this)');
+                }
+                
+                // 라벨의 for 속성과 텍스트 업데이트
+                var label = row.querySelector('.item-text');
+                if (label) {
+                    label.setAttribute('for', 'item-' + newNum);
+                    
+                    // 텍스트에서 번호 부분만 업데이트
+                    var text = label.textContent;
+                    var match = text.match(/^(\d+)\./);
+                    if (match) {
+                        label.textContent = text.replace(/^\d+\./, newNum + '.');
+                    }
+                }
+                
+                // 답변 input ID 업데이트
+                var answerInput = row.querySelector('.answer-input');
+                if (answerInput) {
+                    answerInput.id = 'answer-' + newNum;
+                }
+                
+                // 삭제 버튼 onclick 업데이트
+                var deleteBtn = row.querySelector('.delete-btn');
+                if (deleteBtn) {
+                    deleteBtn.setAttribute('onclick', 'deleteItem(' + newNum + ')');
+                }
+            });
+        }
+        
+        // 체크박스 처리
+        function handleCheck(itemNum, checkbox) {
+            var row = checkbox.closest('.checklist-item-row');
+            if (checkbox.checked) {
+                row.classList.add('completed');
+            } else {
+                row.classList.remove('completed');
+            }
+            updateProgress();
+            saveData();
+        }
+        
+        // 진행률 업데이트
+        function updateProgress() {
+            var checkboxes = document.querySelectorAll('.checklist-item-row input[type="checkbox"]');
+            var total = checkboxes.length;
+            var completed = document.querySelectorAll('.checklist-item-row input[type="checkbox"]:checked').length;
+            var percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            document.getElementById('progress-text').textContent = '완료: ' + completed + ' / ' + total + ' 항목';
+            var progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = percentage + '%';
+        }
+        
+        // 데이터 저장 (localStorage)
+        function saveData() {
+            var data = {
+                기본정보: {
+                    회사명: document.getElementById('company-name').value,
+                    검토기간: document.getElementById('review-period').value,
+                    작성일: document.getElementById('creation-date').value,
+                    작성자: document.getElementById('author').value,
+                    검토자: document.getElementById('reviewer').value
+                },
+                체크리스트: []
+            };
+            
+            // 체크리스트 데이터 수집
+            document.querySelectorAll('.checklist-item-row').forEach(function(row, index) {
+                var checkbox = row.querySelector('input[type="checkbox"]');
+                var answer = row.querySelector('.answer-input');
+                data.체크리스트.push({
+                    checked: checkbox ? checkbox.checked : false,
+                    answer: answer ? answer.value : ''
+                });
+            });
+            
+            // localStorage에 저장
+            localStorage.setItem('checklistData', JSON.stringify(data));
+            
+            // 저장 표시
+            showAutoSave();
+        }
+        
+        // 데이터 불러오기 (localStorage)
+        function loadData() {
+            var savedData = localStorage.getItem('checklistData');
+            if (!savedData) return;
+            
+            var data = JSON.parse(savedData);
+            
+            // 기본 정보 복원
+            if (data.기본정보) {
+                document.getElementById('company-name').value = data.기본정보.회사명 || '';
+                document.getElementById('review-period').value = data.기본정보.검토기간 || '';
+                document.getElementById('creation-date').value = data.기본정보.작성일 || '';
+                document.getElementById('author').value = data.기본정보.작성자 || '';
+                document.getElementById('reviewer').value = data.기본정보.검토자 || '';
+            }
+            
+            // 체크리스트 복원
+            var rows = document.querySelectorAll('.checklist-item-row');
+            if (data.체크리스트) {
+                data.체크리스트.forEach(function(item, index) {
+                    if (rows[index]) {
+                        var checkbox = rows[index].querySelector('input[type="checkbox"]');
+                        var answer = rows[index].querySelector('.answer-input');
+                        
+                        if (checkbox && item.checked) {
+                            checkbox.checked = true;
+                            rows[index].classList.add('completed');
+                        }
+                        if (answer) {
+                            answer.value = item.answer || '';
+                        }
+                    }
+                });
+            }
+            
+            updateProgress();
+        }
+        
+        // 자동 저장 표시
+        function showAutoSave() {
+            var indicator = document.getElementById('auto-save');
+            indicator.classList.add('show');
+            setTimeout(function() {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+        
+        // HTML 파일로 다운로드
+        function downloadHTML() {
+            saveData(); // 먼저 저장
+            
+            var htmlContent = document.documentElement.outerHTML;
+            var blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+            var link = document.createElement('a');
+            var url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', '반기재무제표_체크리스트_' + new Date().toISOString().split('T')[0] + '.html');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert('✅ HTML 파일이 다운로드되었습니다. 이 파일을 브라우저에서 열면 자동으로 데이터가 복원됩니다.');
+        }
+        
+        // JSON 데이터 내보내기
+        function exportJSON() {
+            var data = localStorage.getItem('checklistData');
+            if (!data) {
+                alert('저장된 데이터가 없습니다.');
+                return;
+            }
+            
+            var blob = new Blob([data], {type: 'application/json;charset=utf-8'});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'checklist_data_' + new Date().toISOString().split('T')[0] + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('✅ JSON 데이터가 다운로드되었습니다.');
+        }
+        
+        // 페이지 로드 시 실행
+        window.onload = function() {
+            createChecklist();
+            loadData(); // localStorage에서 데이터 불러오기
+            updateProgress();
+        };
+    </script>
+</body>
+</html>
