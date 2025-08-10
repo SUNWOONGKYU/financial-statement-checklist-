@@ -270,8 +270,108 @@
             background: #c82333;
         }
         
-        .admin-mode .delete-btn {
+        .edit-btn {
+            display: none;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .edit-btn:hover {
+            background: #138496;
+        }
+        
+        .admin-mode .delete-btn,
+        .admin-mode .edit-btn {
             display: block;
+        }
+        
+        .admin-mode .admin-only {
+            display: inline-block !important;
+        }
+        
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #495057;
+            font-weight: 600;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        
+        .modal-select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        
+        .modal-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .modal-btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .modal-btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .modal-btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .modal-btn-secondary:hover {
+            background: #545b62;
         }
         
         .footer {
@@ -319,6 +419,7 @@
             <button class="btn btn-danger" onclick="toggleAdmin()">🔐 관리자 모드</button>
             <button class="btn btn-success" onclick="downloadHTML()">📄 HTML 파일로 저장</button>
             <button class="btn btn-primary" onclick="exportJSON()">💾 JSON 데이터 내보내기</button>
+            <button class="btn btn-warning admin-only" onclick="showAddItemDialog()" style="display:none;">➕ 항목 추가</button>
         </div>
         
         <div class="info-section">
@@ -347,16 +448,46 @@
             </div>
         </div>
         
+        <div style="padding: 20px 30px; background: #fff3cd; border-left: 4px solid #ffc107; margin: 0;">
+            <p style="margin: 0; color: #856404; font-size: 1em; font-weight: 500;">
+                📌 <strong>답변 작성 가이드:</strong> "해당사항 없음", "예", "아니오" 중 하나를 선택해서 기입하되, 설명이 필요하면 그 뒤에 내용을 기입하세요.
+            </p>
+        </div>
+        
         <div class="checklist-content" id="checklist-content">
             <!-- 체크리스트 항목들이 여기에 들어갑니다 -->
         </div>
         
         <div class="footer">
-            <p>© 2025 반기재무제표 검토 체크리스트 | 자동 저장 기능 활성화</p>
+            <p>반기재무제표 검토 체크리스트</p>
         </div>
     </div>
     
     <div class="auto-save-indicator" id="auto-save">✓ 자동 저장됨</div>
+    
+    <!-- 항목 추가/수정 모달 -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header" id="modalTitle">항목 추가</h2>
+            <label>카테고리 선택:</label>
+            <select id="modalCategory" class="modal-select">
+                <option value="">카테고리를 선택하세요</option>
+            </select>
+            <label>하위 카테고리 선택:</label>
+            <select id="modalSubcategory" class="modal-select">
+                <option value="">하위 카테고리를 선택하세요</option>
+            </select>
+            <label>삽입 위치 (번호):</label>
+            <input type="number" id="modalPosition" class="modal-input" placeholder="예: 10 (10번 위치에 삽입, 비워두면 맨 끝에 추가)" min="1">
+            <label>항목 내용:</label>
+            <input type="text" id="modalItemText" class="modal-input" placeholder="예: 회계정책 변경사항이 적절히 공시되었습니까?">
+            <input type="hidden" id="modalItemIndex">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">취소</button>
+                <button class="modal-btn modal-btn-primary" onclick="saveItem()">저장</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // 전역 변수
@@ -601,6 +732,7 @@
                         '</div>' +
                         '<label for="item-' + itemNumber + '" class="item-text">' + item + '</label>' +
                         '<input type="text" class="answer-input" id="answer-' + itemNumber + '" placeholder="답변을 입력하세요..." onchange="saveData()">' +
+                        '<button class="edit-btn" onclick="editItem(' + itemNumber + ')">수정</button>' +
                         '<button class="delete-btn" onclick="deleteItem(' + itemNumber + ')">삭제</button>';
                     
                     subcategoryDiv.appendChild(row);
@@ -617,9 +749,252 @@
             if (password === '1234') {
                 adminMode = !adminMode;
                 document.body.classList.toggle('admin-mode');
+                
+                // 항목 추가 버튼 표시/숨김
+                var addBtn = document.querySelector('.admin-only');
+                if (addBtn) {
+                    addBtn.style.display = adminMode ? 'inline-block' : 'none';
+                }
+                
                 alert(adminMode ? '관리자 모드가 활성화되었습니다.' : '관리자 모드가 비활성화되었습니다.');
             } else if (password !== null) {
                 alert('비밀번호가 틀렸습니다.');
+            }
+        }
+        
+        // 항목 추가 다이얼로그 표시
+        function showAddItemDialog() {
+            if (!adminMode) {
+                alert('관리자 권한이 필요합니다.');
+                return;
+            }
+            
+            document.getElementById('modalTitle').textContent = '항목 추가';
+            document.getElementById('modalItemText').value = '';
+            document.getElementById('modalItemIndex').value = '';
+            document.getElementById('modalPosition').value = '';
+            
+            // 위치 입력란 표시
+            var positionInput = document.getElementById('modalPosition');
+            if (positionInput) {
+                positionInput.style.display = 'block';
+                positionInput.placeholder = '하위 카테고리 선택 후 표시됩니다';
+                // 라벨 찾아서 표시
+                var labels = document.querySelectorAll('.modal-content label');
+                labels.forEach(function(label) {
+                    if (label.textContent.includes('삽입 위치')) {
+                        label.style.display = 'block';
+                    }
+                });
+            }
+            
+            // 카테고리 옵션 생성
+            var categorySelect = document.getElementById('modalCategory');
+            categorySelect.innerHTML = '<option value="">카테고리를 선택하세요</option>';
+            
+            var categories = [...new Set(checklistItems.map(item => item.category))];
+            categories.forEach(function(cat) {
+                var option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+            
+            // 하위 카테고리 초기화
+            document.getElementById('modalSubcategory').innerHTML = '<option value="">하위 카테고리를 선택하세요</option>';
+            
+            document.getElementById('itemModal').style.display = 'block';
+        }
+        
+        // 카테고리 변경 시 하위 카테고리 업데이트
+        document.getElementById('modalCategory').addEventListener('change', function() {
+            var selectedCategory = this.value;
+            var subcategorySelect = document.getElementById('modalSubcategory');
+            subcategorySelect.innerHTML = '<option value="">하위 카테고리를 선택하세요</option>';
+            
+            if (selectedCategory) {
+                var subcategories = checklistItems
+                    .filter(item => item.category === selectedCategory)
+                    .map(item => item.subcategory);
+                
+                subcategories.forEach(function(subcat) {
+                    var option = document.createElement('option');
+                    option.value = subcat;
+                    option.textContent = subcat;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        });
+        
+        // 하위 카테고리 변경 시 해당 카테고리의 항목 수 업데이트
+        document.getElementById('modalSubcategory').addEventListener('change', function() {
+            var selectedSubcategory = this.value;
+            if (selectedSubcategory && !document.getElementById('modalItemIndex').value) {
+                // 추가 모드일 때만 플레이스홀더 업데이트
+                var subcategoryItems = 0;
+                document.querySelectorAll('.subcategory').forEach(function(subcat) {
+                    var title = subcat.querySelector('.subcategory-title');
+                    if (title && title.textContent === selectedSubcategory) {
+                        subcategoryItems = subcat.querySelectorAll('.checklist-item-row').length;
+                    }
+                });
+                
+                var positionInput = document.getElementById('modalPosition');
+                if (positionInput) {
+                    positionInput.placeholder = '예: 3 (이 하위 카테고리에 ' + subcategoryItems + '개 항목, 비워두면 맨 끝에 추가)';
+                }
+            }
+        });
+        
+        // 항목 수정
+        function editItem(itemNum) {
+            if (!adminMode) {
+                alert('관리자 권한이 필요합니다.');
+                return;
+            }
+            
+            var row = document.querySelector('[data-item="' + itemNum + '"]');
+            if (!row) return;
+            
+            var itemText = row.querySelector('.item-text');
+            if (!itemText) return;
+            
+            document.getElementById('modalTitle').textContent = '항목 수정';
+            document.getElementById('modalItemText').value = itemText.textContent;
+            document.getElementById('modalItemIndex').value = itemNum;
+            
+            // 수정 모드에서는 위치 선택 숨기기
+            var positionInput = document.getElementById('modalPosition');
+            if (positionInput) {
+                positionInput.style.display = 'none';
+                // 라벨 숨기기
+                var labels = document.querySelectorAll('.modal-content label');
+                labels.forEach(function(label) {
+                    if (label.textContent.includes('삽입 위치')) {
+                        label.style.display = 'none';
+                    }
+                });
+            }
+            
+            // 현재 항목의 카테고리 찾기 (선택사항)
+            var categorySelect = document.getElementById('modalCategory');
+            categorySelect.innerHTML = '<option value="">카테고리 유지</option>';
+            
+            document.getElementById('itemModal').style.display = 'block';
+        }
+        
+        // 항목 저장
+        function saveItem() {
+            var itemText = document.getElementById('modalItemText').value.trim();
+            var itemIndex = document.getElementById('modalItemIndex').value;
+            var category = document.getElementById('modalCategory').value;
+            var subcategory = document.getElementById('modalSubcategory').value;
+            var position = parseInt(document.getElementById('modalPosition').value);
+            
+            if (!itemText) {
+                alert('항목 내용을 입력하세요.');
+                return;
+            }
+            
+            if (itemIndex) {
+                // 수정 모드
+                var row = document.querySelector('[data-item="' + itemIndex + '"]');
+                if (row) {
+                    var label = row.querySelector('.item-text');
+                    if (label) {
+                        // 번호 유지하면서 텍스트만 변경
+                        var currentText = label.textContent;
+                        var match = currentText.match(/^(\d+)\./);
+                        if (match) {
+                            label.textContent = match[1] + '. ' + itemText.replace(/^\d+\.?\s*/, '');
+                        } else {
+                            label.textContent = itemText;
+                        }
+                    }
+                }
+            } else {
+                // 추가 모드
+                if (!category || !subcategory) {
+                    alert('카테고리와 하위 카테고리를 선택하세요.');
+                    return;
+                }
+                
+                // 해당 하위 카테고리 찾기
+                var targetSubcategory = null;
+                var subcategoryItems = [];
+                
+                document.querySelectorAll('.subcategory').forEach(function(subcat) {
+                    var title = subcat.querySelector('.subcategory-title');
+                    if (title && title.textContent === subcategory) {
+                        targetSubcategory = subcat;
+                        subcategoryItems = subcat.querySelectorAll('.checklist-item-row');
+                    }
+                });
+                
+                if (!targetSubcategory) {
+                    alert('하위 카테고리를 찾을 수 없습니다.');
+                    return;
+                }
+                
+                var subcategoryItemCount = subcategoryItems.length;
+                
+                // 하위 카테고리 내에서의 위치 유효성 검사
+                if (position && (position < 1 || position > subcategoryItemCount + 1)) {
+                    alert('유효한 위치를 입력하세요. (1 ~ ' + (subcategoryItemCount + 1) + ')');
+                    return;
+                }
+                
+                // 새 항목 생성 - 먼저 전체 항목 수 계산
+                var allRows = document.querySelectorAll('.checklist-item-row');
+                var newNum = allRows.length + 1;
+                
+                var newRow = document.createElement('div');
+                newRow.className = 'checklist-item-row';
+                newRow.setAttribute('data-item', newNum);
+                
+                // 임시로 큰 번호 사용 (나중에 renumberItems로 정리)
+                newRow.innerHTML = 
+                    '<div class="checkbox-wrapper">' +
+                        '<input type="checkbox" id="item-' + newNum + '" onchange="handleCheck(' + newNum + ', this)">' +
+                    '</div>' +
+                    '<label for="item-' + newNum + '" class="item-text">' + newNum + '. ' + itemText.replace(/^\d+\.?\s*/, '') + '</label>' +
+                    '<input type="text" class="answer-input" id="answer-' + newNum + '" placeholder="답변을 입력하세요..." onchange="saveData()">' +
+                    '<button class="edit-btn" onclick="editItem(' + newNum + ')">수정</button>' +
+                    '<button class="delete-btn" onclick="deleteItem(' + newNum + ')">삭제</button>';
+                
+                if (position && position <= subcategoryItemCount) {
+                    // 하위 카테고리 내 특정 위치에 삽입
+                    var targetItem = subcategoryItems[position - 1];
+                    targetSubcategory.insertBefore(newRow, targetItem);
+                } else {
+                    // 하위 카테고리 맨 끝에 추가
+                    targetSubcategory.appendChild(newRow);
+                }
+                
+                // 전체 번호 재정렬
+                renumberItems();
+            }
+            
+            closeModal();
+            saveData();
+            updateProgress();
+        }
+        
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('itemModal').style.display = 'none';
+            document.getElementById('modalItemText').value = '';
+            document.getElementById('modalItemIndex').value = '';
+            document.getElementById('modalCategory').value = '';
+            document.getElementById('modalSubcategory').value = '';
+            document.getElementById('modalPosition').value = '';
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            var modal = document.getElementById('itemModal');
+            if (event.target == modal) {
+                closeModal();
             }
         }
         
@@ -678,6 +1053,12 @@
                     answerInput.id = 'answer-' + newNum;
                 }
                 
+                // 수정 버튼 onclick 업데이트
+                var editBtn = row.querySelector('.edit-btn');
+                if (editBtn) {
+                    editBtn.setAttribute('onclick', 'editItem(' + newNum + ')');
+                }
+                
                 // 삭제 버튼 onclick 업데이트
                 var deleteBtn = row.querySelector('.delete-btn');
                 if (deleteBtn) {
@@ -721,14 +1102,19 @@
                     작성자: document.getElementById('author').value,
                     검토자: document.getElementById('reviewer').value
                 },
-                체크리스트: []
+                체크리스트: [],
+                삭제된항목: [] // 삭제된 항목 추적
             };
             
-            // 체크리스트 데이터 수집
-            document.querySelectorAll('.checklist-item-row').forEach(function(row, index) {
+            // 현재 존재하는 체크리스트 항목들만 저장
+            var rows = document.querySelectorAll('.checklist-item-row');
+            rows.forEach(function(row) {
                 var checkbox = row.querySelector('input[type="checkbox"]');
                 var answer = row.querySelector('.answer-input');
+                var itemText = row.querySelector('.item-text');
+                
                 data.체크리스트.push({
+                    text: itemText ? itemText.textContent : '',
                     checked: checkbox ? checkbox.checked : false,
                     answer: answer ? answer.value : ''
                 });
@@ -757,23 +1143,47 @@
                 document.getElementById('reviewer').value = data.기본정보.검토자 || '';
             }
             
-            // 체크리스트 복원
-            var rows = document.querySelectorAll('.checklist-item-row');
-            if (data.체크리스트) {
-                data.체크리스트.forEach(function(item, index) {
-                    if (rows[index]) {
-                        var checkbox = rows[index].querySelector('input[type="checkbox"]');
-                        var answer = rows[index].querySelector('.answer-input');
-                        
-                        if (checkbox && item.checked) {
-                            checkbox.checked = true;
-                            rows[index].classList.add('completed');
+            // 체크리스트 복원 - 텍스트 매칭 방식으로 변경
+            if (data.체크리스트 && data.체크리스트.length > 0) {
+                var rows = document.querySelectorAll('.checklist-item-row');
+                
+                // 텍스트 기반 매칭인지 인덱스 기반인지 확인
+                if (data.체크리스트[0].text) {
+                    // 새로운 방식: 텍스트 기반 매칭
+                    data.체크리스트.forEach(function(savedItem) {
+                        rows.forEach(function(row) {
+                            var itemText = row.querySelector('.item-text');
+                            if (itemText && itemText.textContent === savedItem.text) {
+                                var checkbox = row.querySelector('input[type="checkbox"]');
+                                var answer = row.querySelector('.answer-input');
+                                
+                                if (checkbox && savedItem.checked) {
+                                    checkbox.checked = true;
+                                    row.classList.add('completed');
+                                }
+                                if (answer) {
+                                    answer.value = savedItem.answer || '';
+                                }
+                            }
+                        });
+                    });
+                } else {
+                    // 기존 방식: 인덱스 기반 (하위 호환성)
+                    data.체크리스트.forEach(function(item, index) {
+                        if (rows[index]) {
+                            var checkbox = rows[index].querySelector('input[type="checkbox"]');
+                            var answer = rows[index].querySelector('.answer-input');
+                            
+                            if (checkbox && item.checked) {
+                                checkbox.checked = true;
+                                rows[index].classList.add('completed');
+                            }
+                            if (answer) {
+                                answer.value = item.answer || '';
+                            }
                         }
-                        if (answer) {
-                            answer.value = item.answer || '';
-                        }
-                    }
-                });
+                    });
+                }
             }
             
             updateProgress();
